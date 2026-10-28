@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Checklist Fase 1 · Centinela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+color-scheme:dark;
+--bg:#0D0B14;--bg-top:#241A42;--surface:#16112A;--surface-2:#1C1535;--ink:#F4F1FF;--muted:#B7AED6;--line:#28213A;--line-2:#372D52;
+--brand:#784AF7;--violet:#A78BFF;--violet-soft:rgba(120,74,247,0.14);--chip:#C9B8FF;--white:#FFFFFF;--on-sun:#1D1530;
+--sun:#F2C230;--sun-soft:rgba(242,194,48,0.12);--sun-ink:#FFE08A;
+--ok:#6FD39E;--ok-soft:rgba(111,211,158,0.14);--warn:#FFC36B;--warn-soft:rgba(255,195,107,0.12);
+--display:"Inter","Helvetica Neue",Arial,sans-serif;--mono:"IBM Plex Mono","Courier New",ui-monospace,monospace;
+--gutter:clamp(16px,4vw,32px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse 90% 520px at 85% 0%,rgba(120,74,247,0.30),rgba(120,74,247,0) 70%),linear-gradient(180deg,var(--bg-top) 0px,#150F28 520px,var(--bg) 1100px) no-repeat,var(--bg);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 var(--gutter) 120px}
+h1,h2,h3{line-height:1.12;margin:0;text-wrap:balance}
+h1{font-size:clamp(2rem,6vw,3rem);font-weight:900;letter-spacing:-.05em;line-height:1.04}
+h1 em{font-style:normal;color:var(--violet)}
+h2{font-size:1.3rem;font-weight:800;letter-spacing:-.03em}
+h3{font-size:1.02rem;font-weight:700;letter-spacing:-.02em}
+p{margin:0}
+a{color:var(--violet)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:6px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--violet);font-weight:500;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--brand);flex:none}
+.hero{padding:30px 0 22px;display:flex;flex-direction:column;gap:14px}
+.pair{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px}
+.bars{display:flex;align-items:center;gap:3px;height:24px}
+.bars i{display:block;width:5px;border-radius:99px;background:var(--white)}
+.bars i.v{background:var(--brand)}
+.word{font-size:1.25rem;font-weight:800;letter-spacing:-.05em;line-height:1}
+.word span{font-weight:600;color:var(--violet)}
+.pair .x{color:var(--muted);font-family:var(--mono)}
+.pair .p{background:var(--sun);color:var(--on-sun);padding:4px 12px;border-radius:999px;font-weight:700;font-size:.92rem}
+.lead{color:var(--muted);max-width:66ch}
+.lead b{color:var(--ink)}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-family:var(--mono);font-size:.72rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--chip)}
+.howto{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.howto ol{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:.93rem}
+.howto b{color:var(--ink)}
+/* barra fija de progreso */
+.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin:0 calc(var(--gutter) * -1);padding:10px var(--gutter)}
+.bar-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.meter{flex:1;min-width:140px;height:10px;border-radius:99px;background:var(--line-2);overflow:hidden;display:flex}
+.meter i{display:block;height:100%;transition:width .3s}
+.meter .done{background:var(--ok)} .meter .part{background:var(--sun)}
+.count{font-family:var(--mono);font-size:.8rem;color:var(--sun-ink);white-space:nowrap}
+.sync{font-family:var(--mono);font-size:.7rem;color:var(--muted);white-space:nowrap}
+.sync.on{color:var(--ok)}
+.sync.warn{color:var(--warn)}
+.aviso{background:var(--warn-soft);border:1px solid var(--warn);color:var(--warn);border-radius:12px;padding:12px 14px;font-size:.9rem;margin-top:14px}
+.aviso[hidden]{display:none}
+.flist .on.off{color:var(--warn)}
+/* grupos y preguntas */
+.group{padding-top:30px;display:flex;flex-direction:column;gap:12px}
+.group-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.group-head span{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;scroll-margin-top:70px}
+.q.st-respondida{border-color:rgba(111,211,158,.45)}
+.q.st-parcial{border-color:rgba(255,195,107,.45)}
+.q-top{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:start}
+.num{font-family:var(--mono);font-weight:600;font-size:.85rem;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--violet-soft);color:var(--violet)}
+.q.st-respondida .num{background:var(--ok-soft);color:var(--ok)}
+.q-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.q-text p{font-size:.92rem;color:var(--muted)}
+.kind{align-self:flex-start;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--chip)}
+.kind.doc{border-color:rgba(242,194,48,.4);color:var(--sun-ink)}
+label.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+textarea{width:100%;min-height:96px;resize:vertical;font:inherit;font-size:16px;line-height:1.5;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:10px;padding:12px}
+textarea::placeholder{color:#7F77A0}
+textarea:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px rgba(120,74,247,.3)}
+.q-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.status{display:flex;gap:6px;flex-wrap:wrap}
+.status button{font:600 .78rem var(--display);padding:8px 12px;min-height:36px;border-radius:999px;border:1px solid var(--line-2);background:transparent;color:var(--chip);cursor:pointer}
+.status button[aria-pressed="true"][data-v="pendiente"]{background:var(--line-2);color:var(--ink);border-color:var(--line-2)}
+.status button[aria-pressed="true"][data-v="parcial"]{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+.status button[aria-pressed="true"][data-v="respondida"]{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.saved{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+/* acciones */
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:700 .92rem var(--display);border:0;border-radius:999px;padding:12px 18px;min-height:44px;cursor:pointer;background:var(--brand);color:var(--white);text-decoration:none;display:inline-flex;align-items:center}
+.btn.ghost{background:var(--violet-soft);color:var(--chip);border:1px solid var(--line-2)}
+.files{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line-2);padding-top:10px}
+.files-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.up{font:600 .8rem var(--display);padding:8px 12px;min-height:36px;border-radius:999px;border:1px dashed var(--sun);background:var(--sun-soft);color:var(--sun-ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.up[hidden]{display:none}
+.up input{position:absolute;width:1px;height:1px;opacity:0}
+.up.drive{border-color:var(--line-2);background:transparent;color:var(--chip)}
+.flist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.flist li{display:flex;align-items:center;gap:8px;font-size:.86rem;background:var(--bg);border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;min-width:0}
+.flist a{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.flist .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px 6px}
+.fmsg{font-size:.78rem;color:var(--warn)}
+.flist small{color:var(--muted);font-family:var(--mono);font-size:.7rem;white-space:nowrap}
+.flist .on{font-family:var(--mono);font-size:.62rem;color:var(--ok);white-space:nowrap}
+.prop{background:linear-gradient(160deg,rgba(120,74,247,0.22),rgba(120,74,247,0.04));border:2px solid var(--brand);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.prop .badge{align-self:flex-start;font-family:var(--mono);font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--sun);color:var(--on-sun)}
+.prop p,.prop li{font-size:.92rem;color:var(--muted)}
+.prop ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:4px}
+.prop b{color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;background:var(--violet-soft)}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:640px){
+.tbl{border:0;background:transparent;overflow:visible}
+.tbl table,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+.tbl tr.h{display:none}
+.tbl tr{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 0;margin-bottom:8px}
+.tbl td{border:0;padding:4px 12px}
+.tbl td::before{content:attr(data-label);display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.tbl td:first-child{font-weight:700;font-size:.95rem}
+.tbl td:first-child::before{display:none}
+td.n{white-space:normal}
+}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.8rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+<div class="pair"><span class="logo" aria-label="luma legal"><span class="bars" aria-hidden="true"><i style="height:11px"></i><i class="v" style="height:24px"></i><i style="height:14px"></i><i style="height:19px"></i><i class="v" style="height:9px"></i></span><span class="word">luma<span>legal</span></span></span><span class="x">×</span><span class="p">Centinela</span></div>
+<span class="eyebrow">Investor Ready · Cierre del diagnóstico · Fase 1</span>
+<h1>22 preguntas y documentos <em>para Centinela.</em></h1>
+<p class="lead">¡Hola, equipo Centinela! 👋 Con estas 22 respuestas <b>cerramos el diagnóstico de la Fase 1</b> y dejamos los documentos listos para firmar. Respondan en el orden que quieran y vuelvan cuando tengan el dato: todo se va guardando solito.</p>
+<div class="meta"><span class="tag">Expediente LL-2026-0824-CEN</span><span class="tag">Lo responde: Cristian</span><span class="tag">Confidencial</span></div>
+<div class="howto">
+<h3>Así de fácil 🚀</h3>
+<ol>
+<li>Escribe tu respuesta debajo de cada pregunta. Si es un documento, dale a <b>Adjuntar archivo</b> y súbelo desde el celu o el computador (PDF, Word, Excel, fotos… lo que sea).</li>
+<li>Marca cada ítem como <b>Listo</b>, <b>A medias</b> o déjalo en <b>Pendiente</b>.</li>
+<li>¿No tienes algo a la mano? Tranqui: escribe lo que sepas y lo completamos juntos en la sesión.</li>
+</ol>
+</div>
+</header>
+<div class="bar"><div class="bar-in">
+<div class="meter" role="img" id="meter" aria-label="Progreso"><i class="done" id="m-done"></i><i class="part" id="m-part"></i></div>
+<span class="count" id="count">0 de 22 listas</span>
+<span class="sync" id="sync">⏳ Conectando…</span>
+</div></div>
+<p class="aviso" id="aviso" role="status" hidden>Para que tus respuestas se guarden en la nube, abre esta página desde el enlace que te envió el equipo Luma. Mientras tanto, lo que escribas queda guardado solo en este dispositivo.</p>
+<main id="list"></main>
+<template id="propuesta">
+<div class="prop">
+<span class="badge">Lo que proponemos en Luma 💜</span>
+<h3>Así nos imaginamos el cap table y el vesting</h3>
+<p>Con el Acta 004 cada acción de $10.000 se parte en mil de $10 (el capital sigue igualito). Y antes de la ronda dejamos un 10% reservado para el equipo.</p>
+<div class="tbl"><table>
+<tr class="h"><th>Socio</th><th>Hoy</th><th>Después del split</th><th>Fully diluted con pool del 10%</th><th>Vesting</th></tr>
+<tr><td>Johnny Alexander Montoya Franco</td><td class="n">800 · 40%</td><td class="n">800.000</td><td class="n">36%</td><td>25% a la firma y el 75% restante en 36 cuotas mensuales</td></tr>
+<tr><td>Miguel Ángel Ortiz Salgado</td><td class="n">800 · 40%</td><td class="n">800.000</td><td class="n">36%</td><td>25% a la firma y el 75% restante en 36 cuotas mensuales</td></tr>
+<tr><td>Cristian Andredy Moncada Palacio</td><td class="n">400 · 20%</td><td class="n">400.000</td><td class="n">18%</td><td>50% a la firma y el 50% restante en 24 cuotas mensuales desde el 12 ago 2026, sin cliff</td></tr>
+<tr><td>Pool para el equipo</td><td class="n">—</td><td class="n">222.222</td><td class="n">10%</td><td>Para el equipo: 4 años con 1 de cliff</td></tr>
+<tr><td>Jhon Jairo Gómez Pineda</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td>Sale con acuerdo de salida y paz y salvo</td></tr>
+</table></div>
+<ul>
+<li><b>Johnny y Miguel:</b> el 25% a la firma les reconoce los 32 meses que llevan desde febrero de 2024, sin llegar a la ronda con todo ya consolidado.</li>
+<li><b>Cristian:</b> es el único founder full time y además pagó por sus acciones. Por eso 50% a la firma y 24 meses sin cliff: en agosto de 2028 ya tiene todo. Si sale como good leaver, se le recompra lo no consolidado al precio que pagó, no a valor nominal.</li>
+<li><b>Para todos:</b> si venden la compañía y a alguno lo sacan sin justa causa en los 12 meses siguientes, se le acelera todo.</li>
+</ul>
+<p>Con una ronda seed del 15%, Johnny y Miguel quedarían con ~30,6% cada uno, Cristian con 15,3% y el pool con 8,5%.</p>
+</div>
+</template>
+<footer>
+<span>¿Dudas? Nos escribes y lo resolvemos juntos. 💜 Equipo Luma</span>
+<span>Luma Legal S.A.S. · Expediente LL-2026-0824-CEN · 14 de octubre de 2026</span>
+<span>Revisó: Johana Patricia Buitrago Naranjo, abogada, T.P. 243.756 del C.S. de la J.</span>
+</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+/* ===== Configuración de Supabase ===== */
+var SUPABASE_URL='https://buieqrvzlrhuqqpvewlv.supabase.co';
+var SUPABASE_KEY='PEGA_AQUI_LA_LLAVE_PUBLICA'; /* Supabase > Project Settings > API Keys > "anon public" o "publishable" */
+/* ===================================== */
+var Q=[
+['Papeles de la sociedad','doc','Actas No. 001 y No. 003','Las necesitamos con firmas y anexos. La 003 es clave: según el contrato, es la que aprobó la venta de las acciones de Jhon Jairo.','Súbelas aquí o cuéntanos cuándo las tienes'],
+['Papeles de la sociedad','doc','Renuncias a la convocatoria del Acta 002','Si alguien firmó una renuncia a la convocatoria, ¿quién y cuándo? Si no existe, también nos sirve saberlo.','¿Existen? ¿Quién las firmó?'],
+['Papeles de la sociedad','doc','Libros de actas y de accionistas','Una copia completa y foliada. ¿Los registraron en la Cámara de Comercio?','Súbelos o cuéntanos dónde están'],
+['Papeles de la sociedad','doc','El pago a Jhon Jairo','El soporte bancario de los $11.620.000, cuánto puso cada comprador y su correo y celular. ¿Quedó algo pendiente con él?','Soportes, montos y contacto'],
+['Cap table','preg','¿Cómo se imaginan el cap table a futuro?','Antes y después de la primera ronda: quién debería mantener el control y cuánto están dispuestos a ceder.',''],
+['Cap table','preg','¿Quieren guardar un % para el equipo?','Un pool de vesting para empleados: ¿cuánto (5%, 10%, 15%) y para quiénes? Vendedores, primeros devs, advisors…',''],
+['Cap table','preg','¿Les cuadra el vesting que proponemos?','25% a la firma y 36 meses para Johnny y Miguel; 50% a la firma y 24 meses sin cliff para Cristian. Arriba está el detalle.',''],
+['Cap table','preg','¿Hay otros compromisos con acciones?','Promesas a alguien, notas convertibles, SAFEs, préstamos de socios o plata que pusieron y no se capitalizó.',''],
+['Cap table','preg','¿Cuánto tiempo le mete cada founder?','Horas a la semana de cada uno hoy, y cuándo pasarían Johnny y Miguel a full time.',''],
+['El negocio','preg','¿Cómo manejan los leads?','¿El agente de Real Estate atiende los leads de las inmobiliarias clientes o Centinela capta leads propios? ¿De quién son esos datos?',''],
+['El negocio','preg','¿Su modelo se parece al de La Haus?','¿Funcionan como portal o marketplace y cobran comisión por cierre? ¿O venden software por suscripción a inmobiliarias?',''],
+['El negocio','preg','¿Qué facturan y cuánto de cada cosa?','Suscripción, implementación, consultoría o formación. ¿Tienen clientes por fuera de Colombia?',''],
+['Propiedad intelectual','preg','¿Qué se construyó mientras estaban en La Haus o en Alegra?','Con qué equipos, cuentas y en qué horario. ¿Se usó algún dato, código, cliente o info de La Haus? Aquí la honestidad nos protege a todos.',''],
+['Propiedad intelectual','doc','Contratos y fechas de salida','Cuándo salió cada uno de La Haus, el contrato de Miguel y el de quien está hoy en Alegra.','Fechas y contratos'],
+['Propiedad intelectual','preg','Dominio, cuentas y marca','¿A nombre de quién están centinela.io, la nube, GitHub y las cuentas de los proveedores de modelos? ¿Ya pidieron la marca CENTINELA en la SIC?',''],
+['RUES y RUB','preg','¿Quién llenó el RUES 2026?','¿El contador, uno de ustedes o alguien más? ¿Con qué info?',''],
+['RUES y RUB','preg','¿Ha habido mujeres en Centinela?','¿Alguna mujer ha sido socia, de junta directiva o parte del equipo? En el RUES salió 50% de mujeres en el capital y queremos entender de dónde viene.',''],
+['RUES y RUB','preg','¿Quiénes son los 3 empleados del RUES?','Nombre, cargo, desde cuándo, cuánto y cómo se les paga, y si tienen contrato laboral, de prestación de servicios o ninguno. ¿Por qué salió que no aportan a seguridad social?',''],
+['RUES y RUB','preg','¿Quién hizo el RUB del 3 de octubre?','¿Por qué incluyó a Cristian desde el 1 de agosto y no a Jhon Jairo?',''],
+['El equipo','preg','Lo que se les prometió a los vendedores','Si se les ofreció un % de palabra: cuánto, en qué condiciones, cuándo y quién lo ofreció.',''],
+['Números','doc','Estados financieros y contador','Los de 2024 y 2025, el balance de prueba a septiembre de 2026 y el contacto del contador. Con el patrimonio actual calculamos el precio mínimo fiscal de las acciones.','Súbelos y déjanos el contacto del contador'],
+['Producto','doc','Repos y clientes','Acceso de lectura a los repositorios (o el git log con autor y fecha) y los contratos de los 10 clientes más grandes.','Links o cómo darnos acceso']
+];
+var KEY='centinela-checklist-fase1-v1';
+var state={};
+try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){state={}}
+function id(i){return 'q'+String(i+1).padStart(2,'0')}
+function st(k){return (state[k]&&state[k].estado)||'pendiente'}
+function txt(k){return (state[k]&&state[k].texto)||''}
+function files(k){return (state[k]&&state[k].archivos)||[]}
+function ts(v){var n=Date.parse(v||'');return isNaN(n)?0:n}
+var $=function(x){return document.getElementById(x)};
+function size(n){return n>1048576?(n/1048576).toFixed(1).replace('.',',')+' MB':Math.max(1,Math.round(n/1024))+' KB'}
+
+/* ---------- Conexión con Supabase ---------- */
+var clave=null;
+(function(){
+  var m=(location.hash||'').match(/k=([0-9a-f]{40,})/i);
+  try{
+    if(m){clave=m[1].toLowerCase();localStorage.setItem(KEY+'-clave',clave)}
+    else clave=localStorage.getItem(KEY+'-clave');
+  }catch(e){if(m)clave=m[1].toLowerCase()}
+})();
+var sb=null;
+var configurado=SUPABASE_KEY.indexOf('PEGA_')!==0;
+if(configurado&&clave&&window.supabase&&window.supabase.createClient){
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+}
+function setSync(t,cls){var s=$('sync');s.textContent=t;s.className='sync'+(cls?' '+cls:'')}
+function syncInicial(){
+  if(sb){setSync('⏳ Conectando…');return}
+  if(!configurado){setSync('💾 Solo en este dispositivo');return}
+  if(!clave){setSync('⚠️ Abre el enlace que te enviamos','warn');$('aviso').hidden=false;return}
+  setSync('⚠️ Sin conexión: guardado en este dispositivo','warn');
+}
+
+/* archivos sin conexión (respaldo en este dispositivo) */
+var mem={},idb=null;
+function openDB(){return new Promise(function(res){try{var r=indexedDB.open('centinela-fase1',1);r.onupgradeneeded=function(){r.result.createObjectStore('files')};r.onsuccess=function(){res(r.result)};r.onerror=function(){res(null)}}catch(e){res(null)}})}
+var ready=openDB().then(function(d){idb=d});
+function putBlob(key,blob){mem[key]=blob;return ready.then(function(){if(!idb)return;return new Promise(function(res){try{var t=idb.transaction('files','readwrite');t.objectStore('files').put(blob,key);t.oncomplete=res;t.onerror=res}catch(e){res()}})})}
+function getBlob(key){if(mem[key])return Promise.resolve(mem[key]);return ready.then(function(){if(!idb)return null;return new Promise(function(res){try{var r=idb.transaction('files').objectStore('files').get(key);r.onsuccess=function(){res(r.result||null)};r.onerror=function(){res(null)}}catch(e){res(null)}})})}
+function delBlob(key){delete mem[key];return ready.then(function(){if(!idb)return;try{idb.transaction('files','readwrite').objectStore('files').delete(key)}catch(e){}})}
+
+/* ---------- Pintar las preguntas ---------- */
+var list=$('list'),groups={},order=[];
+Q.forEach(function(q,i){
+  var g=q[0];
+  if(!groups[g]){
+    var sec=document.createElement('section');sec.className='group';
+    var h=document.createElement('div');h.className='group-head';
+    var h2=document.createElement('h2');h2.textContent=g;
+    var c=document.createElement('span');c.dataset.g=g;
+    h.appendChild(h2);h.appendChild(c);sec.appendChild(h);list.appendChild(sec);
+    groups[g]=sec;order.push(g);
+    if(g==='Cap table'){sec.appendChild(document.getElementById('propuesta').content.cloneNode(true))}
+  }
+  var k=id(i);
+  var art=document.createElement('article');art.className='q';art.id=k;
+  art.innerHTML='<div class="q-top"><span class="num">'+(i+1)+'</span><div class="q-text"><span class="kind'+(q[1]==='doc'?' doc':'')+'">'+(q[1]==='doc'?'Documento':'Pregunta')+'</span><h3></h3><p></p></div></div>'+
+   '<label class="sr" for="t-'+k+'"></label><textarea id="t-'+k+'"></textarea>'+
+   '<div class="files"><div class="files-row"><label class="up"><span>📎 Adjuntar archivo</span><input type="file" multiple></label></div><ul class="flist"></ul><span class="fmsg" hidden></span></div>'+
+   '<div class="q-foot"><div class="status" role="group" aria-label="Estado"><button type="button" data-v="pendiente">Pendiente</button><button type="button" data-v="parcial">A medias</button><button type="button" data-v="respondida">Listo ✓</button></div><span class="saved"></span></div>';
+  art.querySelector('h3').textContent=q[2];
+  art.querySelector('p').textContent=q[3];
+  art.querySelector('label.sr').textContent='Respuesta a: '+q[2];
+  var ta=art.querySelector('textarea');ta.placeholder=q[4]||'Escribe aquí tu respuesta';ta.value=txt(k);
+  groups[g].appendChild(art);
+});
+function paint(){
+  var done=0,part=0;
+  Q.forEach(function(q,i){
+    var k=id(i),s=st(k),art=$(k);
+    art.className='q st-'+s;
+    art.querySelectorAll('.status button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.v===s))});
+    var ta=art.querySelector('textarea');
+    if(document.activeElement!==ta&&ta.value!==txt(k))ta.value=txt(k);
+    var ul=art.querySelector('.flist'),fs=files(k);
+    if(ul.dataset.sig!==JSON.stringify(fs)){ul.dataset.sig=JSON.stringify(fs);ul.textContent='';
+      fs.forEach(function(f,fi){
+        var li=document.createElement('li');
+        var a=document.createElement('a');a.href='#';a.dataset.k=k;a.dataset.i=fi;a.textContent='📄 '+(f.nombre||'Archivo');li.appendChild(a);
+        if(f.size){var sm=document.createElement('small');sm.textContent=size(f.size);li.appendChild(sm)}
+        var on=document.createElement('span');on.className=f.path?'on':'on off';on.textContent=f.path?'EN LÍNEA':'SOLO AQUÍ';li.appendChild(on);
+        var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Quitar '+(f.nombre||'archivo'));x.textContent='×';x.dataset.k=k;x.dataset.i=fi;li.appendChild(x);
+        ul.appendChild(li)})}
+    var sv=art.querySelector('.saved'),u=state[k]&&state[k].actualizado;
+    sv.textContent=u?'Guardado '+new Date(u).toLocaleString('es-CO',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'';
+    if(s==='respondida')done++;else if(s==='parcial')part++;
+  });
+  order.forEach(function(g){
+    var n=0,t=0;Q.forEach(function(q,i){if(q[0]===g){t++;if(st(id(i))==='respondida')n++}});
+    document.querySelector('[data-g="'+g+'"]').textContent=n+' de '+t;
+  });
+  $('m-done').style.width=(done/Q.length*100)+'%';$('m-part').style.width=(part/Q.length*100)+'%';
+  $('count').textContent=done+' de '+Q.length+' listas'+(part?' · '+part+' a medias':'');
+  $('meter').setAttribute('aria-label',done+' de '+Q.length+' listas');
+}
+function local(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+
+/* ---------- Guardar en la nube ---------- */
+var timers={},dirty={},enVuelo=0,claveMala=false;
+function estadoNube(){
+  if(!sb||claveMala)return;
+  if(enVuelo>0){setSync('⏳ Guardando…');return}
+  if(Object.keys(dirty).length){setSync('⚠️ Sin conexión: se sube al volver','warn');return}
+  setSync('☁️ Guardado en la nube','on');
+}
+function subir(k){
+  if(!sb||claveMala)return Promise.resolve();
+  var cur=state[k];if(!cur)return Promise.resolve();
+  enVuelo++;estadoNube();
+  return sb.rpc('checklist_guardar',{
+    p_clave:clave,p_id:k,p_pregunta:Q[+k.slice(1)-1][2],p_texto:cur.texto||'',p_estado:cur.estado||'pendiente',
+    p_archivos:(cur.archivos||[]).filter(function(f){return f.path}).map(function(f){return {nombre:f.nombre,size:f.size||0,path:f.path}}),
+    p_actualizado:cur.actualizado||new Date().toISOString()
+  }).then(function(r){
+    if(r.error)throw r.error;
+    delete dirty[k];
+  }).catch(function(e){
+    dirty[k]=true;
+    if(e&&(e.code==='28000'||/clave invalida/.test(e.message||''))){claveMala=true;setSync('⚠️ Enlace no válido','warn')}
+  }).then(function(){enVuelo--;estadoNube()});
+}
+function push(k){
+  local();paint();
+  if(!sb)return;
+  dirty[k]=true;estadoNube();
+  clearTimeout(timers[k]);
+  timers[k]=setTimeout(function(){subir(k)},700);
+}
+function traer(){
+  if(!sb||claveMala)return Promise.resolve();
+  return sb.rpc('checklist_leer',{p_clave:clave}).then(function(r){
+    if(r.error)throw r.error;
+    var remotos={};
+    (r.data||[]).forEach(function(d){
+      remotos[d.id]=d;
+      if(dirty[d.id]||timers[d.id]&&dirty[d.id])return;
+      var mine=state[d.id];
+      if(!mine||ts(d.actualizado)>ts(mine.actualizado)){
+        var arr=Array.isArray(d.archivos)?d.archivos.filter(function(f){return f&&typeof f.nombre==='string'&&typeof f.path==='string'}).map(function(f){return {nombre:f.nombre,size:+f.size||0,path:f.path}}):[];
+        var soloAqui=mine?(mine.archivos||[]).filter(function(f){return !f.path}):[];
+        state[d.id]={texto:d.texto||'',estado:d.estado||'pendiente',archivos:arr.concat(soloAqui),actualizado:d.actualizado||''};
+      }
+    });
+    /* lo que se respondió sin conexión y no está en la nube, se sube */
+    Object.keys(state).forEach(function(k){
+      if(!/^q\d\d$/.test(k))return;
+      var rem=remotos[k];
+      if(!rem||ts(state[k].actualizado)>ts(rem.actualizado))subir(k);
+    });
+    local();paint();estadoNube();
+  }).catch(function(e){
+    if(e&&(e.code==='28000'||/clave invalida/.test(e.message||''))){claveMala=true;setSync('⚠️ Enlace no válido','warn');return}
+    setSync('⚠️ Sin conexión: guardado en este dispositivo','warn');
+  });
+}
+function setField(k,patch){
+  var cur=state[k]||{};
+  state[k]={texto:patch.texto!==undefined?patch.texto:(cur.texto||''),estado:patch.estado||cur.estado||'pendiente',archivos:patch.archivos||cur.archivos||[],actualizado:new Date().toISOString()};
+  push(k);
+}
+
+/* ---------- Eventos ---------- */
+list.addEventListener('input',function(e){
+  if(e.target.tagName!=='TEXTAREA')return;
+  var k=e.target.id.slice(2),cur=st(k);
+  var patch={texto:e.target.value};
+  if(cur==='pendiente'&&e.target.value.trim())patch.estado='parcial';
+  setField(k,patch);
+});
+function limpio(n){
+  var p=n.lastIndexOf('.'),base=p>0?n.slice(0,p):n,ext=p>0?n.slice(p):'';
+  base=base.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9._-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,60)||'archivo';
+  ext=ext.normalize('NFD').replace(/[^A-Za-z0-9.]/g,'').slice(0,10);
+  return base+ext;
+}
+var LIMITE=52428800;
+list.addEventListener('change',function(e){
+  if(e.target.type!=='file')return;
+  var art=e.target.closest('.q'),k=art.id,msg=art.querySelector('.fmsg'),inp=e.target,lab=inp.closest('label').firstChild;
+  var fl=[].slice.call(inp.files);if(!fl.length)return;
+  msg.hidden=true;var avisos=[];
+  var seq=Promise.resolve();
+  fl.forEach(function(f,n){seq=seq.then(function(){
+    lab.textContent='⏳ Subiendo '+(n+1)+' de '+fl.length+'…';
+    if(f.size>LIMITE){avisos.push(f.name+' pesa '+size(f.size)+' (máximo 50 MB). Envíanoslo por correo o WhatsApp.');return}
+    var marca=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    var rec={nombre:f.name,size:f.size};
+    if(sb&&!claveMala){
+      var path=clave+'/'+k+'/'+marca+'-'+limpio(f.name);
+      return sb.storage.from('archivos').upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false}).then(function(r){
+        if(r.error)throw r.error;
+        rec.path=path;setField(k,{archivos:files(k).concat([rec])});
+      }).catch(function(){
+        rec.lid=k+'-'+marca;
+        return putBlob(rec.lid,f).then(function(){
+          setField(k,{archivos:files(k).concat([rec])});
+          avisos.push(f.name+' quedó solo en este dispositivo: no se pudo subir. Intenta de nuevo con buena conexión.');
+        });
+      });
+    }
+    rec.lid=k+'-'+marca;
+    return putBlob(rec.lid,f).then(function(){setField(k,{archivos:files(k).concat([rec])})});
+  })});
+  seq.then(function(){
+    lab.textContent='📎 Adjuntar archivo';inp.value='';
+    if(avisos.length){msg.textContent=avisos.join(' ');msg.hidden=false}
+  });
+});
+function direct(name,blob){var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)}
+list.addEventListener('click',function(e){
+  var a=e.target.closest('.flist a');
+  if(a){e.preventDefault();var f=files(a.dataset.k)[+a.dataset.i];if(!f)return;
+    if(f.path&&sb){
+      var old=a.textContent;a.textContent='⏳ Descargando…';
+      sb.storage.from('archivos').download(f.path).then(function(r){
+        a.textContent=old;if(r.error||!r.data)throw r.error;direct(f.nombre,r.data);
+      }).catch(function(){a.textContent=old;alert('No se pudo descargar. Revisa tu conexión e intenta de nuevo.')});
+      return}
+    getBlob(f.lid).then(function(b){if(b)direct(f.nombre,b);else alert('Este archivo se subió desde otro dispositivo.')});return}
+  var x=e.target.closest('.flist .x');
+  if(x){var k=x.dataset.k,fs=files(k).slice(),f=fs.splice(+x.dataset.i,1)[0];
+    if(!f||!confirm('¿Quitar '+(f.nombre||'este archivo')+'?'))return;
+    setField(k,{archivos:fs});if(f.lid)delBlob(f.lid);
+    if(f.path&&sb)sb.storage.from('archivos').remove([f.path]).catch(function(){});return}
+  var b=e.target.closest('.status button');if(!b)return;
+  setField(b.closest('.q').id,{estado:b.dataset.v});
+});
+document.querySelectorAll('.tbl table').forEach(function(t){var h=t.querySelector('tr.h');if(!h)return;var l=[].map.call(h.children,function(th){return th.textContent});t.querySelectorAll('tr:not(.h)').forEach(function(tr){[].forEach.call(tr.children,function(td,i){td.setAttribute('data-label',l[i]||'')})})});
+paint();syncInicial();
+if(sb){
+  traer();
+  setInterval(function(){if(document.visibilityState==='visible')traer()},20000);
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')traer()});
+  window.addEventListener('online',function(){Object.keys(dirty).forEach(subir);traer()});
+}
+})();
+</script>
+</body>
+</html>
