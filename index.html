@@ -62,6 +62,28 @@ a{color:var(--violet)}
 .aviso{background:var(--warn-soft);border:1px solid var(--warn);color:var(--warn);border-radius:12px;padding:12px 14px;font-size:.9rem;margin-top:14px}
 .aviso[hidden]{display:none}
 .flist .on.off{color:var(--warn)}
+/* inicio de sesión */
+body.locked .bar,body.locked #list,body.locked .howto,body.locked .meta{display:none}
+.gate{display:none;margin-top:22px;background:var(--surface);border:1px solid var(--line-2);border-radius:18px;padding:22px 18px;flex-direction:column;gap:14px;max-width:520px}
+body.locked .gate{display:flex}
+.gate h2{font-size:1.25rem}
+.gate p{color:var(--muted);font-size:.93rem}
+.gate label{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.gate input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px}
+.gate input:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px rgba(120,74,247,.3)}
+.gate input.code{font-family:var(--mono);font-size:1.4rem;letter-spacing:.4em;text-align:center}
+.gate .btn{justify-content:center;width:100%}
+.gate .btn[disabled]{opacity:.6;cursor:wait}
+.gate .field{display:flex;flex-direction:column;gap:6px}
+.gate .msg{font-size:.88rem;border-radius:10px;padding:10px 12px}
+.gate .msg.ok{background:var(--ok-soft);color:var(--ok)}
+.gate .msg.err{background:var(--warn-soft);color:var(--warn)}
+.gate .link{background:none;border:0;color:var(--violet);font:600 .86rem var(--display);cursor:pointer;padding:4px 0;text-decoration:underline;align-self:flex-start}
+.gate [hidden]{display:none!important}
+.who{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.7rem;color:var(--muted);min-width:0}
+.who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.who[hidden]{display:none}
+.who button{font:600 .72rem var(--display);padding:5px 10px;border-radius:999px;border:1px solid var(--line-2);background:transparent;color:var(--chip);cursor:pointer}
 /* grupos y preguntas */
 .group{padding-top:30px;display:flex;flex-direction:column;gap:12px}
 .group-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
@@ -150,8 +172,25 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 <div class="meter" role="img" id="meter" aria-label="Progreso"><i class="done" id="m-done"></i><i class="part" id="m-part"></i></div>
 <span class="count" id="count">0 de 22 listas</span>
 <span class="sync" id="sync">⏳ Conectando…</span>
+<span class="who" id="who"><span id="who-mail"></span><button type="button" id="salir">Salir</button></span>
 </div></div>
-<p class="aviso" id="aviso" role="status" hidden>Para que tus respuestas se guarden en la nube, abre esta página desde el enlace que te envió el equipo Luma. Mientras tanto, lo que escribas queda guardado solo en este dispositivo.</p>
+<section class="gate" id="gate" aria-labelledby="gate-t">
+<h2 id="gate-t">Entra con tu correo 🔐</h2>
+<p>Este checklist es confidencial. Solo pueden entrar los correos autorizados por el equipo Luma.</p>
+<form id="f-mail" class="field" novalidate>
+<label for="g-mail">Tu correo</label>
+<input id="g-mail" type="email" inputmode="email" autocomplete="email" placeholder="nombre@empresa.com" required>
+<button class="btn" type="submit" id="b-mail">Enviarme el acceso</button>
+</form>
+<form id="f-code" class="field" hidden novalidate>
+<p id="g-sent"></p>
+<label for="g-code">Código de 6 dígitos (si te llegó)</label>
+<input id="g-code" class="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••">
+<button class="btn" type="submit" id="b-code">Entrar</button>
+<button class="link" type="button" id="b-otro">Usar otro correo o reenviar</button>
+</form>
+<p class="msg" id="g-msg" hidden></p>
+</section>
 <main id="list"></main>
 <template id="propuesta">
 <div class="prop">
@@ -181,12 +220,13 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 </footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script>
 (function(){
-/* ===== Configuración de Supabase ===== */
-var SUPABASE_URL='https://buieqrvzlrhuqqpvewlv.supabase.co';
-var SUPABASE_KEY='PEGA_AQUI_LA_LLAVE_PUBLICA'; /* Supabase > Project Settings > API Keys > "anon public" o "publishable" */
-/* ===================================== */
+/* La URL y la llave pública de Supabase están en config.js */
+var CFG=window.CENTINELA_CONFIG||{};
+var SUPABASE_URL=CFG.url||'';
+var SUPABASE_KEY=CFG.key||'PEGA_AQUI_LA_LLAVE_PUBLICA';
 var Q=[
 ['Papeles de la sociedad','doc','Actas No. 001 y No. 003','Las necesitamos con firmas y anexos. La 003 es clave: según el contrato, es la que aprobó la venta de las acciones de Jhon Jairo.','Súbelas aquí o cuéntanos cuándo las tienes'],
 ['Papeles de la sociedad','doc','Renuncias a la convocatoria del Acta 002','Si alguien firmó una renuncia a la convocatoria, ¿quién y cuándo? Si no existe, también nos sirve saberlo.','¿Existen? ¿Quién las firmó?'],
@@ -222,28 +262,14 @@ function ts(v){var n=Date.parse(v||'');return isNaN(n)?0:n}
 var $=function(x){return document.getElementById(x)};
 function size(n){return n>1048576?(n/1048576).toFixed(1).replace('.',',')+' MB':Math.max(1,Math.round(n/1024))+' KB'}
 
-/* ---------- Conexión con Supabase ---------- */
-var clave=null;
-(function(){
-  var m=(location.hash||'').match(/k=([0-9a-f]{40,})/i);
-  try{
-    if(m){clave=m[1].toLowerCase();localStorage.setItem(KEY+'-clave',clave)}
-    else clave=localStorage.getItem(KEY+'-clave');
-  }catch(e){if(m)clave=m[1].toLowerCase()}
-})();
-var sb=null;
-var configurado=SUPABASE_KEY.indexOf('PEGA_')!==0;
-if(configurado&&clave&&window.supabase&&window.supabase.createClient){
-  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+/* ---------- Conexión con Supabase (sesión por correo) ---------- */
+var sb=null,usuario=null;
+var configurado=SUPABASE_KEY.indexOf('PEGA_')!==0&&!!SUPABASE_URL;
+if(configurado&&window.supabase&&window.supabase.createClient){
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit'}});
 }
 function setSync(t,cls){var s=$('sync');s.textContent=t;s.className='sync'+(cls?' '+cls:'')}
-function syncInicial(){
-  if(sb){setSync('⏳ Conectando…');return}
-  if(!configurado){setSync('💾 Solo en este dispositivo');return}
-  if(!clave){setSync('⚠️ Abre el enlace que te enviamos','warn');$('aviso').hidden=false;return}
-  setSync('⚠️ Sin conexión: guardado en este dispositivo','warn');
-}
-
+var claveMala=false;
 /* archivos sin conexión (respaldo en este dispositivo) */
 var mem={},idb=null;
 function openDB(){return new Promise(function(res){try{var r=indexedDB.open('centinela-fase1',1);r.onupgradeneeded=function(){r.result.createObjectStore('files')};r.onsuccess=function(){res(r.result)};r.onerror=function(){res(null)}}catch(e){res(null)}})}
@@ -309,7 +335,8 @@ function paint(){
 function local(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 
 /* ---------- Guardar en la nube ---------- */
-var timers={},dirty={},enVuelo=0,claveMala=false;
+var timers={},dirty={},enVuelo=0;
+function noAutorizado(e){return !!(e&&(e.code==='42501'||/no autorizado|JWT|not authorized|permission denied/i.test(e.message||'')))}
 function estadoNube(){
   if(!sb||claveMala)return;
   if(enVuelo>0){setSync('⏳ Guardando…');return}
@@ -317,11 +344,11 @@ function estadoNube(){
   setSync('☁️ Guardado en la nube','on');
 }
 function subir(k){
-  if(!sb||claveMala)return Promise.resolve();
+  if(!sb||!usuario||claveMala)return Promise.resolve();
   var cur=state[k];if(!cur)return Promise.resolve();
   enVuelo++;estadoNube();
   return sb.rpc('checklist_guardar',{
-    p_clave:clave,p_id:k,p_pregunta:Q[+k.slice(1)-1][2],p_texto:cur.texto||'',p_estado:cur.estado||'pendiente',
+    p_id:k,p_pregunta:Q[+k.slice(1)-1][2],p_texto:cur.texto||'',p_estado:cur.estado||'pendiente',
     p_archivos:(cur.archivos||[]).filter(function(f){return f.path}).map(function(f){return {nombre:f.nombre,size:f.size||0,path:f.path}}),
     p_actualizado:cur.actualizado||new Date().toISOString()
   }).then(function(r){
@@ -329,19 +356,19 @@ function subir(k){
     delete dirty[k];
   }).catch(function(e){
     dirty[k]=true;
-    if(e&&(e.code==='28000'||/clave invalida/.test(e.message||''))){claveMala=true;setSync('⚠️ Enlace no válido','warn')}
+    if(noAutorizado(e))bloqueado();
   }).then(function(){enVuelo--;estadoNube()});
 }
 function push(k){
   local();paint();
-  if(!sb)return;
+  if(!sb||!usuario)return;
   dirty[k]=true;estadoNube();
   clearTimeout(timers[k]);
   timers[k]=setTimeout(function(){subir(k)},700);
 }
 function traer(){
-  if(!sb||claveMala)return Promise.resolve();
-  return sb.rpc('checklist_leer',{p_clave:clave}).then(function(r){
+  if(!sb||!usuario||claveMala)return Promise.resolve();
+  return sb.rpc('checklist_leer').then(function(r){
     if(r.error)throw r.error;
     var remotos={};
     (r.data||[]).forEach(function(d){
@@ -362,7 +389,7 @@ function traer(){
     });
     local();paint();estadoNube();
   }).catch(function(e){
-    if(e&&(e.code==='28000'||/clave invalida/.test(e.message||''))){claveMala=true;setSync('⚠️ Enlace no válido','warn');return}
+    if(noAutorizado(e)){bloqueado();return}
     setSync('⚠️ Sin conexión: guardado en este dispositivo','warn');
   });
 }
@@ -398,8 +425,8 @@ list.addEventListener('change',function(e){
     if(f.size>LIMITE){avisos.push(f.name+' pesa '+size(f.size)+' (máximo 50 MB). Envíanoslo por correo o WhatsApp.');return}
     var marca=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
     var rec={nombre:f.name,size:f.size};
-    if(sb&&!claveMala){
-      var path=clave+'/'+k+'/'+marca+'-'+limpio(f.name);
+    if(sb&&usuario&&!claveMala){
+      var path='centinela/'+k+'/'+marca+'-'+limpio(f.name);
       return sb.storage.from('archivos').upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false}).then(function(r){
         if(r.error)throw r.error;
         rec.path=path;setField(k,{archivos:files(k).concat([rec])});
@@ -439,12 +466,83 @@ list.addEventListener('click',function(e){
   setField(b.closest('.q').id,{estado:b.dataset.v});
 });
 document.querySelectorAll('.tbl table').forEach(function(t){var h=t.querySelector('tr.h');if(!h)return;var l=[].map.call(h.children,function(th){return th.textContent});t.querySelectorAll('tr:not(.h)').forEach(function(tr){[].forEach.call(tr.children,function(td,i){td.setAttribute('data-label',l[i]||'')})})});
-paint();syncInicial();
-if(sb){
+paint();
+
+/* ---------- Inicio de sesión ---------- */
+var correoPend='';
+function gmsg(t,tipo){var m=$('g-msg');if(!t){m.hidden=true;return}m.textContent=t;m.className='msg '+(tipo||'err');m.hidden=false}
+function bloquear(){document.body.classList.add('locked');$('who').hidden=true}
+function bloqueado(){
+  claveMala=true;
+  gmsg('Este correo no está autorizado para ver el checklist. Si crees que es un error, escríbele al equipo Luma.');
+  if(sb)sb.auth.signOut();
+}
+function limpiarLocal(){state={};try{localStorage.removeItem(KEY)}catch(e){}paint()}
+function entrar(sess){
+  if(!sess||!sess.user)return;
+  if(usuario&&usuario.id===sess.user.id)return;
+  usuario=sess.user;claveMala=false;
+  try{var dueno=localStorage.getItem(KEY+'-dueno');if(dueno&&dueno!==usuario.email){limpiarLocal()}localStorage.setItem(KEY+'-dueno',usuario.email)}catch(e){}
+  document.body.classList.remove('locked');gmsg('');
+  $('who-mail').textContent=usuario.email;$('who').hidden=false;
+  if(location.hash&&/access_token|error/.test(location.hash))history.replaceState(null,'',location.pathname+location.search);
+  setSync('⏳ Conectando…');
   traer();
-  setInterval(function(){if(document.visibilityState==='visible')traer()},20000);
-  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')traer()});
-  window.addEventListener('online',function(){Object.keys(dirty).forEach(subir);traer()});
+}
+function salir(){
+  usuario=null;limpiarLocal();
+  try{localStorage.removeItem(KEY+'-dueno')}catch(e){}
+  bloquear();$('f-mail').hidden=false;$('f-code').hidden=true;
+}
+function errTexto(e){
+  var m=(e&&e.message)||'';
+  if(/not authorized|no autorizado|Database error|signups not allowed|saving new user/i.test(m))return 'Este correo no está autorizado. Revisa que esté bien escrito o escríbele al equipo Luma.';
+  if(/rate limit|seconds|security purposes|too many/i.test(m))return 'Ya te enviamos un acceso hace poco. Espera un minuto y vuelve a intentar.';
+  if(/expired|invalid|otp/i.test(m))return 'El código no es válido o ya venció. Pídelo de nuevo.';
+  return 'No pudimos completar el acceso. Revisa tu conexión e intenta de nuevo.';
+}
+$('f-mail').addEventListener('submit',function(e){
+  e.preventDefault();
+  var mail=$('g-mail').value.trim().toLowerCase();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){gmsg('Escribe un correo válido.');return}
+  if(!sb){gmsg('La página aún no está conectada. Escríbele al equipo Luma.');return}
+  var b=$('b-mail');b.disabled=true;b.textContent='Enviando…';gmsg('');
+  sb.auth.signInWithOtp({email:mail,options:{shouldCreateUser:true,emailRedirectTo:location.origin+location.pathname}}).then(function(r){
+    b.disabled=false;b.textContent='Enviarme el acceso';
+    if(r.error){gmsg(errTexto(r.error));return}
+    correoPend=mail;
+    $('g-sent').textContent='📬 Te enviamos un correo a '+mail+'. Ábrelo en este mismo dispositivo y toca el enlace; si trae un código, escríbelo aquí. Revisa también la carpeta de spam.';
+    $('f-mail').hidden=true;$('f-code').hidden=false;$('g-code').focus();
+  });
+});
+$('f-code').addEventListener('submit',function(e){
+  e.preventDefault();
+  var code=$('g-code').value.replace(/\D/g,'');
+  if(code.length<6){gmsg('Escribe el código completo que te llegó al correo.');return}
+  var b=$('b-code');b.disabled=true;b.textContent='Verificando…';gmsg('');
+  sb.auth.verifyOtp({email:correoPend,token:code,type:'email'}).then(function(r){
+    b.disabled=false;b.textContent='Entrar';
+    if(r.error){gmsg(errTexto(r.error));return}
+    if(r.data&&r.data.session)entrar(r.data.session);
+  });
+});
+$('b-otro').addEventListener('click',function(){$('f-code').hidden=true;$('f-mail').hidden=false;$('g-code').value='';gmsg('');$('g-mail').focus()});
+$('salir').addEventListener('click',function(){if(!confirm('¿Cerrar sesión en este dispositivo?'))return;if(sb)sb.auth.signOut();salir()});
+
+bloquear();
+if(!sb){
+  setSync(configurado?'⚠️ Sin conexión':'⚠️ Falta configurar','warn');
+  gmsg(configurado?'No pudimos conectar. Revisa tu internet y recarga la página.':'La página aún no está conectada. Escríbele al equipo Luma.');
+}else{
+  if(/error_description=/.test(location.hash)){var em=decodeURIComponent((location.hash.match(/error_description=([^&]+)/)||[,''])[1]).replace(/\+/g,' ');gmsg(/expired|invalid/i.test(em)?'El enlace ya venció o ya se usó. Pídelo de nuevo.':'No pudimos completar el acceso: '+em);history.replaceState(null,'',location.pathname)}
+  sb.auth.onAuthStateChange(function(ev,sess){
+    if(sess&&sess.user)entrar(sess);
+    else if(ev==='SIGNED_OUT'&&usuario)salir();
+  });
+  sb.auth.getSession().then(function(r){if(r.data&&r.data.session)entrar(r.data.session)});
+  setInterval(function(){if(usuario&&document.visibilityState==='visible')traer()},20000);
+  document.addEventListener('visibilitychange',function(){if(usuario&&document.visibilityState==='visible')traer()});
+  window.addEventListener('online',function(){if(!usuario)return;Object.keys(dirty).forEach(subir);traer()});
 }
 })();
 </script>
